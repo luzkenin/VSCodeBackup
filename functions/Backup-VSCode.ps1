@@ -44,6 +44,7 @@ function Backup-VSCode {
     }
     
     process {
+        #Can't read some files while Code is running
         $CodeRunning = Get-Process code
         
         if($CodeRunning) {
