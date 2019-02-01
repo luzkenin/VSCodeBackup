@@ -1,22 +1,22 @@
 function Backup-VSCode {
     <#
     .SYNOPSIS
-    Short description
+    Backup VS Code settings and extensions
     
     .DESCRIPTION
-    Long description
+    Backup VS Code settings and extensions
     
     .PARAMETER Path
-    Parameter description
+    Location to store zip file
     
     .PARAMETER Settings
-    Parameter description
+    Switch to backup settings
     
     .PARAMETER Extensions
-    Parameter description
+    Switch to backup extensions
     
     .EXAMPLE
-    An example
+    Backup-VSCode -Path c:\Users\bobby\Desktop -Settings -Extensions
     
     .NOTES
     General notes
