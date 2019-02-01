@@ -53,12 +53,12 @@ function Restore-VSCode {
         $ExtenionsDirectory = "$env:USERPROFILE\.vscode"
         $SettingsDirectory = "$env:APPDATA\Code\User\settings.json"
 
-        Expand-Archive -Path $Path -DestinationPath $env:TEMP
-        if($Extensions) {
-            Copy-Item -Path "$env:TEMP\.vscode" -Destination $Extensions -Force -Recurse
+        Expand-Archive -Path $Path -DestinationPath $env:TEMP -force
+        if($Extensions.IsPresent) {
+            Copy-Item -Path "$env:TEMP\.vscode" -Destination $ExtenionsDirectory -Force -Recurse
         }
-        if($Settings) {
-            Copy-Item -LiteralPath "$env:TEMP\settings.json" -Destination $Settings -Force
+        if($Settings.IsPresent) {
+            Copy-Item -LiteralPath "$env:TEMP\settings.json" -Destination $SettingsDirectory -Force
         }
     }
     
