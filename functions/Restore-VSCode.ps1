@@ -1,22 +1,22 @@
 function Restore-VSCode {
     <#
     .SYNOPSIS
-    Short description
+    Restore VS Code from a backup
     
     .DESCRIPTION
-    Long description
+    Restore VS Code from a backup
     
     .PARAMETER Path
-    Parameter description
+    Path to backup file
     
     .PARAMETER Settings
-    Parameter description
+    Switch to restore settings
     
     .PARAMETER Extensions
-    Parameter description
+    Switch to restore extensions
     
     .EXAMPLE
-    An example
+    Restore-VSCode -Path .\VSCode-2019-01-31T23.33.58.3351871+01.00.zip -Settings -Extensions
     
     .NOTES
     General notes
@@ -55,7 +55,7 @@ function Restore-VSCode {
 
         Expand-Archive -Path $Path -DestinationPath $env:TEMP
         if($Extensions) {
-            Copy-Item -Path "$env:TEMP\.vscode" -Destination $Extensions -Recurse -Force
+            Copy-Item -Path "$env:TEMP\.vscode" -Destination $Extensions -Force -Recurse
         }
         if($Settings) {
             Copy-Item -LiteralPath "$env:TEMP\settings.json" -Destination $Settings -Force
