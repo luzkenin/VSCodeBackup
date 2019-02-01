@@ -22,7 +22,7 @@ Install-Module VSCodeBackup -Scope CurrentUser
 
 ## Usage examples
 
-PowerShell v3 and above required.
+PowerShell v5.1 and above required.
 
 `Backup-VSCode -Path c:\Users\bobby\Desktop -Settings -Extensions`
 
