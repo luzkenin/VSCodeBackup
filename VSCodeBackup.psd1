@@ -12,7 +12,7 @@
     RootModule        = 'VSCodeBackup.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.0.5'
+    ModuleVersion     = '0.0.6'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -107,7 +107,7 @@
             # IconUri = ''
 
             # ReleaseNotes of this module
-            ReleaseNotes = 'https://github.com/potatoqualitee/VSCodeBackup/blob/master/docs/ReleaseNotes.txt'
+            ReleaseNotes = 'https://github.com/luzkenin/VSCodeBackup/blob/master/docs/ReleaseNotes.txt'
 
         } # End of PSData hashtable
 

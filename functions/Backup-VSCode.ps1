@@ -26,6 +26,7 @@ function Backup-VSCode {
     param (
         # Parameter help description
         [Parameter(Mandatory)]
+        [ValidateScript({Test-Path -Path $_})]
         [string]
         $Path,
         # Parameter help description
@@ -41,6 +42,7 @@ function Backup-VSCode {
     begin {
         $TimeStamp = Get-Date -Format o | foreach {$_ -replace ":", "."}
         $Name = "VSCode-$($TimeStamp).zip"
+        $Path = Resolve-Path -Path $Path
     }
     
     process {
@@ -52,11 +54,11 @@ function Backup-VSCode {
             $CodeRunning.CloseMainWindow() | Out-Null
         }
 
-        $ExtenionsDirectory = "$env:USERPROFILE\.vscode"
-        $SettingsDirectory = "$env:APPDATA\Code\User\settings.json"
+        $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
+        $SettingsDirectory = "$env:APPDATA\Code\User\settings.json" | Resolve-Path
         if($Extensions) {
             try {
-                Compress-Archive -Path $ExtenionsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
+                Compress-Archive -Path $ExtensionsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
             }
             catch {
                 throw $_

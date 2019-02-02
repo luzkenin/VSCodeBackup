@@ -26,6 +26,7 @@ function Restore-VSCode {
     param (
         # Parameter help description
         [Parameter(Mandatory)]
+        [ValidateScript({Test-Path -Path $_})]
         [string]
         $Path,
         # Parameter help description
@@ -39,6 +40,7 @@ function Restore-VSCode {
     )
     
     begin {
+        $Path = Resolve-Path -Path $Path
     }
     
     process {
@@ -50,8 +52,8 @@ function Restore-VSCode {
             $CodeRunning.CloseMainWindow() | Out-Null
         }
 
-        $ExtensionsDirectory = "$env:USERPROFILE\.vscode"
-        $SettingsDirectory = "$env:APPDATA\Code\User\settings.json"
+        $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
+        $SettingsDirectory = "$env:APPDATA\Code\User\settings.json" | Resolve-Path
 
         Expand-Archive -Path $Path -DestinationPath $env:TEMP -force
         if($Extensions.IsPresent) {
