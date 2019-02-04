@@ -56,7 +56,7 @@ function Backup-VSCode {
 
         $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
         $SettingsDirectory = "$env:APPDATA\Code\User\settings.json" | Resolve-Path
-        if($Extensions) {
+        if($Extensions.IsPresent) {
             try {
                 Compress-Archive -Path $ExtensionsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
             }
@@ -64,7 +64,7 @@ function Backup-VSCode {
                 throw $_
             }
         }
-        if($Settings) {
+        if($Settings.IsPresent) {
             try {
                 Compress-Archive -LiteralPath $SettingsDirectory -DestinationPath $Path\$Name -Update
             }
