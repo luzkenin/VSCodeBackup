@@ -47,7 +47,7 @@ function Backup-VSCode {
     
     process {
         #Can't read some files while Code is running
-        $CodeRunning = Get-Process code
+        $CodeRunning = Get-Process -Name code -ErrorAction SilentlyContinue
         
         if($CodeRunning) {
             Write-Verbose "Closing VS Code"
