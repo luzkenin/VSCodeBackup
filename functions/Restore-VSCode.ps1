@@ -45,7 +45,7 @@ function Restore-VSCode {
     
     process {
         #Can't write some files while Code is running
-        $CodeRunning = Get-Process code -ErrorAction SilentlyContinue
+        $CodeRunning = Get-Process -Name code -ErrorAction SilentlyContinue
         
         if($CodeRunning) {
             Write-Verbose "Closing VS Code"
@@ -55,7 +55,13 @@ function Restore-VSCode {
         $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
         $SettingsDirectory = "$env:APPDATA\Code\User\settings.json" | Resolve-Path
 
-        Expand-Archive -Path $Path -DestinationPath $env:TEMP -force
+        try {
+            Expand-Archive -Path $Path -DestinationPath $env:TEMP -force
+        }
+        catch {
+            throw $_
+        }
+        
         if($Extensions.IsPresent) {
             Copy-Item -Path "$env:TEMP\.vscode\extensions" -Destination $ExtensionsDirectory -Force -Recurse
         }
