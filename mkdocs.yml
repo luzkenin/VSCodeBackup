@@ -1,0 +1,9 @@
+site_name: VSCodeBackup
+repo_url: https://github.com/luzkenin/VSCodeBackup
+theme: readthedocs
+pages:
+  - Home: index.md
+  - VSCodeBackup Basics:
+    - What is VSCodeBackup: about.md
+    - Quick Start: Quick-Start-Installation-and-Example.md
+  - Acknowledgements: acknowledgements.md

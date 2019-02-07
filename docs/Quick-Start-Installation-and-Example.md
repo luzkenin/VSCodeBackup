@@ -1,5 +1,7 @@
 # Installing VSCodeBackup
 
-    # You can install VSCodeBackup from the Powershell Gallery using
+    # Install VSCodeBackup from the PowerShell Gallery
     Find-Module VSCodeBackup | Install-Module
+
+    #Import Module
     Import-Module VSCodeBackup

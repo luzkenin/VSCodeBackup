@@ -1,0 +1,14 @@
+queue: Hosted VS2017
+
+# Assumes:
+# * you have a [secure] variable for your project in VSTS named NugetApiKey (required to deploy module)
+
+steps:
+- powershell: . .\build.ps1
+  env:
+    NugetApiKey: $(NugetApiKey)
+- task: PublishTestResults@2
+  inputs:
+    testRunner: NUnit
+    testResultsFiles: output\TestResults*.xml
+  condition: succeededOrFailed()

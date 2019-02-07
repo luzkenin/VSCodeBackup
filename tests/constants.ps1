@@ -1,1 +1,0 @@
-$script:ModuleRoot = $PSScriptRoot
