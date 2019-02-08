@@ -5,7 +5,7 @@ function Close-Application {
         [string]
         $ApplicationName,
         [Parameter()]
-        [int]
+        [string]
         $TimeOut = 60
     )
 
@@ -16,21 +16,12 @@ function Close-Application {
         $Timeout = New-TimeSpan -Seconds $TimeOut
         $StopWatch = [diagnostics.stopwatch]::StartNew()
 
-        while ($true -and $StopWatch.elapsed -lt $Timeout) {
-            Try {
-                $ApplicationRunning = Get-Process $ApplicationName -ErrorAction Stop
+        do {
+            $ApplicationRunning = Get-Process $ApplicationName -ErrorAction SilentlyContinue
+            foreach ($App in $ApplicationRunning) {
+                $App.CloseMainWindow() | Out-Null
             }
-            Catch [Microsoft.PowerShell.Commands.ProcessCommandException] {
-                break;
-            }
-            if ($ApplicationRunning) {
-                $ApplicationRunning.CloseMainWindow() | Out-Null
-            }
-            else {
-                break
-            }
-            Start-Sleep -m 500
-        }
+        } while ($true -and $StopWatch.elapsed -lt $timeout)
 
         if ($null -ne (Get-Process $ApplicationName -ErrorAction SilentlyContinue)) {
             Write-Error "Could not close $($ApplicationName)"
