@@ -16,6 +16,7 @@ function Close-Application {
     }
 
     process {
+        $ApplicationName = $ApplicationName -replace "\*", ""
         $Timeout = New-TimeSpan -Seconds $TimeOut
         $StopWatch = [diagnostics.stopwatch]::StartNew()
 
