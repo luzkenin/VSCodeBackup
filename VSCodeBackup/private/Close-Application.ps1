@@ -6,10 +6,13 @@ function Close-Application {
         $ApplicationName,
         [Parameter()]
         [string]
-        $TimeOut = 60
+        $TimeOut = "60"
     )
 
     begin {
+        if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -ne $true ) {
+            throw "This module requires elevation."
+        }
     }
 
     process {
@@ -17,7 +20,7 @@ function Close-Application {
         $StopWatch = [diagnostics.stopwatch]::StartNew()
 
         do {
-            $ApplicationRunning = Get-Process $ApplicationName -ErrorAction SilentlyContinue
+            $ApplicationRunning = Get-Process -Name "*$($ApplicationName)*" -ErrorAction SilentlyContinue
             foreach ($App in $ApplicationRunning) {
                 $App.CloseMainWindow() | Out-Null
             }
