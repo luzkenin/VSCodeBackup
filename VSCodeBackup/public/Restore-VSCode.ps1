@@ -26,7 +26,7 @@ function Restore-VSCode {
     param (
         # Parameter help description
         [Parameter(Mandatory)]
-        [ValidateScript({Test-Path -Path $_})]
+        [ValidateScript( {Test-Path -Path $_})]
         [string]
         $Path,
         # Parameter help description
@@ -45,11 +45,11 @@ function Restore-VSCode {
     
     process {
         #Can't write some files while Code is running
-        $CodeRunning = Get-Process -Name code -ErrorAction SilentlyContinue
-        
-        if($CodeRunning) {
-            Write-Verbose "Closing VS Code"
-            $CodeRunning.CloseMainWindow() | Out-Null
+        try {
+            Close-Application -ApplicationName code
+        }
+        catch {
+            $_
         }
 
         $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
@@ -62,10 +62,10 @@ function Restore-VSCode {
             throw $_
         }
         
-        if($Extensions.IsPresent) {
+        if ($Extensions.IsPresent) {
             Copy-Item -Path "$env:TEMP\.vscode\extensions" -Destination $ExtensionsDirectory -Force -Recurse
         }
-        if($Settings.IsPresent) {
+        if ($Settings.IsPresent) {
             Copy-Item -LiteralPath "$env:TEMP\settings.json" -Destination $SettingsDirectory -Force
         }
     }
