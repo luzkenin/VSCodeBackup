@@ -24,7 +24,7 @@ function Close-Application {
                 break;
             }
             if ($ApplicationRunning) {
-                $Catch = $ApplicationRunning.CloseMainWindow()
+                $ApplicationRunning.CloseMainWindow() | Out-Null
             }
             else {
                 break
