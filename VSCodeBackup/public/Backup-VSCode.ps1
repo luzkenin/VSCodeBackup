@@ -1,5 +1,4 @@
-function Backup-VSCode
-{
+function Backup-VSCode {
     <#
     .SYNOPSIS
     Backup VS Code settings and extensions
@@ -40,51 +39,52 @@ function Backup-VSCode
         $Extensions
     )
 
-    begin
-    {
+    begin {
         $TimeStamp = Get-Date -Format o | ForEach-Object {$_ -replace ":", "."}
         $Name = "VSCode-$($TimeStamp).zip"
         $Path = Resolve-Path -Path $Path
     }
 
-    process
-    {
+    process {
         #Can't read some files while Code is running
-        $CodeRunning = Get-Process -Name code -ErrorAction SilentlyContinue
-
-        if ($CodeRunning)
-        {
-            Write-Verbose "Closing VS Code"
-            $CodeRunning.CloseMainWindow() | Out-Null
+        try {
+            Close-Application -ApplicationName code
+        }
+        catch {
+            $_
         }
 
+        $StartTime = Get-Date -Format o
         $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
         $SettingsDirectory = "$env:APPDATA\Code\User\settings.json" | Resolve-Path
-        if ($Extensions.IsPresent)
-        {
-            try
-            {
+        if ($Extensions.IsPresent) {
+            try {
                 Compress-Archive -Path $ExtensionsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
             }
-            catch
-            {
+            catch {
                 throw $_
             }
         }
-        if ($Settings.IsPresent)
-        {
-            try
-            {
+        if ($Settings.IsPresent) {
+            try {
                 Compress-Archive -LiteralPath $SettingsDirectory -DestinationPath $Path\$Name -Update
             }
-            catch
-            {
+            catch {
                 throw $_
             }
+        }
+        $EndTime = Get-Date -Format o
+        $ElapsedTime = New-TimeSpan -Start $StartTime -End $EndTime
+
+        [PSCustomObject]@{
+            FileName  = [string]$Name
+            FilePath  = [string]$Path
+            StartTime = [datetime]$StartTime
+            Duration  = $ElapsedTime -replace '\.\d+$'
+            EndTime   = [datetime]$EndTime
         }
     }
 
-    end
-    {
+    end {
     }
 }
