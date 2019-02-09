@@ -10,25 +10,31 @@ function Close-Application {
     )
 
     begin {
-        if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -ne $true ) {
-            throw "This module requires elevation."
-        }
     }
 
     process {
+        if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -ne $true ) {
+            throw "This module requires elevation."
+        }
+
         $ApplicationName = $ApplicationName -replace "\*", ""
         $Timeout = New-TimeSpan -Seconds $TimeOut
         $StopWatch = [diagnostics.stopwatch]::StartNew()
-
-        do {
-            $ApplicationRunning = Get-Process -Name "*$($ApplicationName)*" -ErrorAction SilentlyContinue
-            foreach ($App in $ApplicationRunning) {
-                $App.CloseMainWindow() | Out-Null
+        $ApplicationRunning = Get-Process -Name "*$($ApplicationName)*" -ErrorAction SilentlyContinue
+        if ($ApplicationRunning) {
+            do {
+                $ApplicationRunning = Get-Process -Name "*$($ApplicationName)*" -ErrorAction SilentlyContinue
+                foreach ($App in $ApplicationRunning) {
+                    $App.CloseMainWindow() | Out-Null
+                }
+            } while (($ApplicationRunning.HasExited -contains $false) -and ($StopWatch.elapsed -lt $timeout))
+            Start-Sleep -Milliseconds 500
+            if ($ApplicationRunning.HasExited -contains $false) {
+                Write-Error "Could not close all instances of $($ApplicationName)"
             }
-        } while ($true -and ($StopWatch.elapsed -lt $timeout))
-
-        if ($null -ne (Get-Process $ApplicationName -ErrorAction SilentlyContinue)) {
-            Write-Error "Could not close $($ApplicationName)"
+        }
+        else {
+            Write-Verbose "$($ApplicationName) was not open"
         }
     }
 
