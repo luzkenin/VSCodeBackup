@@ -83,6 +83,7 @@ function Backup-VSCode {
             StartTime = [datetime]$StartTime
             Duration  = $ElapsedTime -replace '\.\d+$'
             EndTime   = [datetime]$EndTime
+            Size      = $ZippedSize
         }
     }
 
