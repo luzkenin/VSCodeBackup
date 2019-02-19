@@ -48,7 +48,7 @@ function Backup-VSCode {
     process {
         #Can't read some files while Code is running
         try {
-            Close-Application -ApplicationName code
+            Close-Application -ApplicationName "code"
         }
         catch {
             $_
@@ -75,6 +75,7 @@ function Backup-VSCode {
         }
         $EndTime = Get-Date -Format o
         $ElapsedTime = New-TimeSpan -Start $StartTime -End $EndTime
+        $ZippedSize = [string]([math]::Round((Get-ChildItem $Path\$Name).Length / 1mb)) + "MB"
 
         [PSCustomObject]@{
             FileName  = [string]$Name

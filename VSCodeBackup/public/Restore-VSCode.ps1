@@ -46,7 +46,7 @@ function Restore-VSCode {
     process {
         #Can't write some files while Code is running
         try {
-            Close-Application -ApplicationName code
+            Close-Application -ApplicationName "code"
         }
         catch {
             $_

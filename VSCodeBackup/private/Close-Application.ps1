@@ -19,7 +19,7 @@ function Close-Application {
         $StopWatch = [diagnostics.stopwatch]::StartNew()
         $ApplicationRunning = Get-Process -Name "*$($ApplicationName)*" -ErrorAction SilentlyContinue
         if ($ApplicationRunning) {
-            if ( Test-AdminElevation -ne $true ) {
+            if ( (Test-AdminElevation) -ne $true ) {
                 throw "This module requires elevation if VS Code is running."
             }
             else {
