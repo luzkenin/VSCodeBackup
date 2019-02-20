@@ -4,11 +4,9 @@ Write-Verbose "This psm1 is replaced in the build output. This file is only used
 Write-Verbose $PSScriptRoot
 
 Write-Verbose 'Import everything in sub folders'
-foreach ($folder in @('classes', 'private', 'public', 'includes', 'internal'))
-{
+foreach ($folder in @('classes', 'private', 'public', 'includes', 'internal')) {
     $root = Join-Path -Path $PSScriptRoot -ChildPath $folder
-    if (Test-Path -Path $root)
-    {
+    if (Test-Path -Path $root) {
         Write-Verbose "processing folder $root"
         $files = Get-ChildItem -Path $root -Filter *.ps1 -Recurse
 
