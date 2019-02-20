@@ -1,5 +1,5 @@
-if (Test-Path -Path "C:\MyProject") {
-    Import-Module C:\MyProject\VsCodeBackup\VSCodeBackup\VSCodeBackup.psd1 -Force
+if (Test-Path -Path "C:\MyProjects") {
+    Import-Module C:\MyProjects\VsCodeBackup\VSCodeBackup\VSCodeBackup.psd1 -Force
 }
 else {
     Import-Module C:\git\VsCodeBackup\VSCodeBackup\VSCodeBackup.psd1 -Force
