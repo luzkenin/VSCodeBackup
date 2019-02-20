@@ -1,4 +1,5 @@
-Import-Module C:\MyProjects\VSCodeBackup\VSCodeBackup\VSCodeBackup.psd1 -Force
+Import-Module VSCodeBackup.psd1 -Force
+
 InModuleScope 'VSCodeBackup' {
     Describe "Close-Application" -Tag 'Build' {
         Context "Closes the application" {
