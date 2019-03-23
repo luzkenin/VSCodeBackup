@@ -67,7 +67,7 @@ function Backup-VSCode {
         }
         if ($Settings.IsPresent) {
             try {
-                Compress-Archive -LiteralPath $SettingsDirectory -DestinationPath $Path\$Name -Update
+                Compress-Archive -LiteralPath $SettingsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
             }
             catch {
                 throw $_
@@ -75,15 +75,20 @@ function Backup-VSCode {
         }
         $EndTime = Get-Date -Format o
         $ElapsedTime = New-TimeSpan -Start $StartTime -End $EndTime
-        $ZippedSize = [string]([math]::Round((Get-ChildItem $Path\$Name).Length / 1mb)) + "MB"
+        $ZippedSize = if (Test-Path "$Path\$Name") {[string]([math]::Round((Get-ChildItem $Path\$Name).Length / 1mb)) + "MB"}else {$null}
 
-        [PSCustomObject]@{
-            FileName  = [string]$Name
-            FilePath  = [string]$Path
-            StartTime = [datetime]$StartTime
-            Duration  = $ElapsedTime -replace '\.\d+$'
-            EndTime   = [datetime]$EndTime
-            Size      = $ZippedSize
+        if ($Extensions.IsPresent -or $Settings.IsPresent) {
+            [PSCustomObject]@{
+                FileName  = [string]$Name
+                FilePath  = [string]$Path
+                StartTime = [datetime]$StartTime
+                Duration  = $ElapsedTime -replace '\.\d+$'
+                EndTime   = [datetime]$EndTime
+                Size      = $ZippedSize
+            }
+        }
+        else {
+            Write-warning -Message "Nothing to backup."
         }
     }
 
