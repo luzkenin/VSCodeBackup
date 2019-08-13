@@ -33,6 +33,7 @@ function Get-CodeDirectory {
         [PSCustomObject]@{
             ExtensionsDirectory = $ExtensionsDirectory
             SettingsDirectory   = $SettingsDirectory
+            SettingsFile        = "$SettingsDirectory/settings.json" | Resolve-Path -ErrorAction SilentlyContinue
         }
     }
     
