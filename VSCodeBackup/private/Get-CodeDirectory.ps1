@@ -11,22 +11,28 @@ function Get-CodeDirectory {
         #>
     [CmdletBinding()]
     param (
-        
+
     )
-    
+
     begin {
     }
-    
+
     process {
-        if ($PSVersionTable.OS -like "*linux*") {
-            $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path
-            $SettingsDirectory = "$HOME/.config/Code/User" | Resolve-Path
+        if ($PSVersionTable.PSVersion.Major -ge 6) {
+            if ($PSVersionTable.OS -like "*linux*") {
+                $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path
+                $SettingsDirectory = "$HOME/.config/Code/User" | Resolve-Path
+            }
+            elseif ($PSVersionTable.OS -like "*mac*") {
+                $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path
+                $SettingsDirectory = "$HOME/Library/Application Support/Code/User" | Resolve-Path
+            }
+            elseif ($PSVersionTable.OS -like "*windows*") {
+                $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
+                $SettingsDirectory = "$env:APPDATA\Code\User" | Resolve-Path
+            }
         }
-        elseif ($PSVersionTable.OS -like "*mac*") {
-            $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path
-            $SettingsDirectory = "$HOME/Library/Application Support/Code/User" | Resolve-Path
-        }
-        elseif ($PSVersionTable.OS -like "*windows*") {
+        else {
             $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
             $SettingsDirectory = "$env:APPDATA\Code\User" | Resolve-Path
         }
@@ -36,7 +42,7 @@ function Get-CodeDirectory {
             SettingsFile        = "$SettingsDirectory/settings.json" | Resolve-Path -ErrorAction SilentlyContinue
         }
     }
-    
+
     end {
     }
 }
