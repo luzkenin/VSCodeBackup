@@ -56,12 +56,10 @@ function Backup-VSCode {
 
         $StartTime = Get-Date -Format o
         $CodeDir = Get-CodeDirectory
-        $ExtensionsDirectory = $CodeDir.ExtensionsDirectory
-        $SettingsDirectory = $CodeDir.SettingsDirectory
 
         if ($Extensions.IsPresent) {
             try {
-                Compress-Archive -Path $ExtensionsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
+                Compress-Archive -Path $CodeDir.ExtensionsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
             }
             catch {
                 throw $_
@@ -70,14 +68,14 @@ function Backup-VSCode {
         if ($Settings.IsPresent) {
             if ($CodeDir.SettingsFile) {
                 try {
-                    Compress-Archive -LiteralPath $SettingsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression -CompressionLevel NoCompression
+                    Compress-Archive -LiteralPath $CodeDir.SettingsFile -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
                 }
                 catch {
                     throw $_
                 }
             }
             else {
-                Write-Error "Settings file is missing"
+                Write-Error "Settings file is missing, skipping backup"
             }
         }
         $EndTime = Get-Date -Format o
@@ -95,7 +93,7 @@ function Backup-VSCode {
             }
         }
         else {
-            Write-warning -Message "Nothing to backup."
+            Write-Warning -Message "Nothing to backup."
         }
     }
 
