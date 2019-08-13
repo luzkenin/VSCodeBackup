@@ -2,11 +2,9 @@ function Close-Application {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
-        [string]
-        $ApplicationName,
+        [string]$ApplicationName,
         [Parameter()]
-        [int]
-        $TimeOut = 60
+        [int]$TimeOut = 60
     )
 
     begin {
@@ -16,7 +14,7 @@ function Close-Application {
         $Timeout = New-TimeSpan -Seconds $TimeOut
         $StopWatch = [diagnostics.stopwatch]::StartNew()
 
-        while ($true -and $StopWatch.elapsed -lt $Timeout) {
+        while ($true -and $StopWatch.elapsed -lt $Timeout.TotalSeconds) {
             Try {
                 $ApplicationRunning = Get-Process $ApplicationName -ErrorAction Stop
             }
@@ -38,5 +36,8 @@ function Close-Application {
     }
 
     end {
+        if ($StopWatch.IsRunning) {
+            $StopWatch.Stop()
+        }
     }
 }
