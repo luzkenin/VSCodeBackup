@@ -10,7 +10,7 @@
     CompanyName       = 'Unknown'
     Copyright         = '(c) Joseph Warren. All rights reserved.'
     Description       = 'Simple module to backup and restore VS Code extensions and settings. Useful for transferring to an offline network.'
-    FunctionsToExport = @()
+    FunctionsToExport = @("*")
     CmdletsToExport   = @()
     VariablesToExport = @()
     AliasesToExport   = @()
