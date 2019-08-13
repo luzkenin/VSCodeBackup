@@ -53,7 +53,9 @@ function Restore-VSCode {
             #Can't read some files while Code is running
             Write-Verbose "Closing VS Code"
             try {
-                Close-Application -ApplicationName "code"
+                if ($Pscmdlet.ShouldProcess("VS Code", "Closing VS Code")) {
+                    Close-Application -ApplicationName "code"
+                }
             }
             catch {
                 $_
@@ -61,17 +63,23 @@ function Restore-VSCode {
         }
 
         try {
-            Expand-Archive -Path $Path -DestinationPath $TempPath -force
+            if ($Pscmdlet.ShouldProcess($TempPath, "Expanding VS Code archive to temp destination")) {
+                Expand-Archive -Path $Path -DestinationPath $TempPath -force
+            }
         }
         catch {
             throw $_
         }
 
         if ($Extensions.IsPresent) {
-            Copy-Item -Path "$TempPath\.vscode\extensions" -Destination $CodeDir.ExtensionsDirectory -Force -Recurse
+            if ($Pscmdlet.ShouldProcess($CodeDir.ExtensionsDirectory, "Copying extensions to extenions folder")) {
+                Copy-Item -Path "$TempPath\.vscode\extensions" -Destination $CodeDir.ExtensionsDirectory -Force -Recurse
+            }
         }
         if ($Settings.IsPresent) {
-            Copy-Item -LiteralPath "$TempPath\settings.json" -Destination $CodeDir.SettingsFile -Force
+            if ($Pscmdlet.ShouldProcess($CodeDir.SettingsFile, "Copying settings")) {
+                Copy-Item -LiteralPath "$TempPath\settings.json" -Destination $CodeDir.SettingsFile -Force
+            }
         }
     }
 
