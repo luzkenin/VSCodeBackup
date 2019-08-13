@@ -22,7 +22,7 @@ function Restore-VSCode {
     General notes
     #>
 
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param (
         # Path to zip file
         [Parameter(Mandatory)]
@@ -42,6 +42,7 @@ function Restore-VSCode {
     begin {
         $Path = Resolve-Path -Path $Path
         $TempPath = [system.io.path]::GetTempPath()
+        $CodeDir = Get-CodeDirectory
     }
 
     process {
@@ -58,8 +59,6 @@ function Restore-VSCode {
                 $_
             }
         }
-
-        $CodeDir = Get-CodeDirectory
 
         try {
             Expand-Archive -Path $Path -DestinationPath $TempPath -force
