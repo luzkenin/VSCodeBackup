@@ -26,7 +26,7 @@ function Backup-VSCode {
     param (
         # Parameter help description
         [Parameter(Mandatory)]
-        [ValidateScript( {Test-Path -Path $_})]
+        [ValidateScript( { Test-Path -Path $_ })]
         [string]
         $Path,
         # Parameter help description
@@ -40,7 +40,7 @@ function Backup-VSCode {
     )
 
     begin {
-        $TimeStamp = Get-Date -Format o | ForEach-Object {$_ -replace ":", "."}
+        $TimeStamp = Get-Date -Format o | ForEach-Object { $_ -replace ":", "." }
         $Name = "VSCode-$($TimeStamp).zip"
         $Path = Resolve-Path -Path $Path
     }
@@ -48,15 +48,17 @@ function Backup-VSCode {
     process {
         #Can't read some files while Code is running
         try {
-            Close-Application -ApplicationName code
+            Close-Application -ApplicationName "code"
         }
         catch {
             $_
         }
 
         $StartTime = Get-Date -Format o
-        $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
-        $SettingsDirectory = "$env:APPDATA\Code\User\settings.json" | Resolve-Path
+        $CodeDir = Get-CodeDirectory
+        $ExtensionsDirectory = $CodeDir.ExtensionsDirectory
+        $SettingsDirectory = $CodeDir.SettingsDirectory
+
         if ($Extensions.IsPresent) {
             try {
                 Compress-Archive -Path $ExtensionsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
@@ -66,22 +68,34 @@ function Backup-VSCode {
             }
         }
         if ($Settings.IsPresent) {
-            try {
-                Compress-Archive -LiteralPath $SettingsDirectory -DestinationPath $Path\$Name -Update
+            if ($CodeDir.SettingsFile) {
+                try {
+                    Compress-Archive -LiteralPath $SettingsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression -CompressionLevel NoCompression
+                }
+                catch {
+                    throw $_
+                }
             }
-            catch {
-                throw $_
+            else {
+                Write-Error "Settings file is missing"
             }
         }
         $EndTime = Get-Date -Format o
         $ElapsedTime = New-TimeSpan -Start $StartTime -End $EndTime
+        $ZippedSize = if (Test-Path "$Path\$Name") { [string]([math]::Round((Get-ChildItem $Path\$Name).Length / 1mb)) + "MB" }else { $null }
 
-        [PSCustomObject]@{
-            FileName  = [string]$Name
-            FilePath  = [string]$Path
-            StartTime = [datetime]$StartTime
-            Duration  = $ElapsedTime -replace '\.\d+$'
-            EndTime   = [datetime]$EndTime
+        if ($Extensions.IsPresent -or $Settings.IsPresent) {
+            [PSCustomObject]@{
+                FileName  = [string]$Name
+                FilePath  = [string]$Path
+                StartTime = [datetime]$StartTime
+                Duration  = $ElapsedTime -replace '\.\d+$'
+                EndTime   = [datetime]$EndTime
+                Size      = $ZippedSize
+            }
+        }
+        else {
+            Write-warning -Message "Nothing to backup."
         }
     }
 
