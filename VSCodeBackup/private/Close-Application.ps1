@@ -4,7 +4,7 @@ function Close-Application {
         [Parameter(Mandatory)]
         [string]$ApplicationName,
         [Parameter()]
-        [int]$TimeOut = 60
+        $TimeOut = 60
     )
 
     begin {
@@ -14,7 +14,7 @@ function Close-Application {
         $Timeout = New-TimeSpan -Seconds $TimeOut
         $StopWatch = [diagnostics.stopwatch]::StartNew()
 
-        while ($true -and $StopWatch.elapsed -lt $Timeout.TotalSeconds) {
+        while ($true -and ($StopWatch.elapsed -lt $Timeout)) {
             Try {
                 $ApplicationRunning = Get-Process $ApplicationName -ErrorAction Stop
             }
@@ -22,7 +22,15 @@ function Close-Application {
                 break;
             }
             if ($ApplicationRunning) {
-                $ApplicationRunning.CloseMainWindow() | Out-Null
+                if ($PSVersionTable.Platform -notlike "*Unix*") {
+                    $ApplicationRunning.CloseMainWindow() | Out-Null
+                }
+                elseif ($PSVersionTable.Platform -notlike "*Windows*") {
+                    $ApplicationRunning | Stop-Process -Force
+                }
+                else {
+                    Write-Error "Could not determine platform"
+                }
             }
             else {
                 break
