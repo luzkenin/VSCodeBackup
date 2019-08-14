@@ -43,14 +43,12 @@ function Restore-VSCode {
         $Path = Resolve-Path -Path $Path
         $TempPath = [system.io.path]::GetTempPath()
         $CodeDir = Get-CodeDirectory
+        $CodeRunning = Get-Process -Name "code" -ErrorAction SilentlyContinue
     }
 
     process {
-        #Can't write some files while Code is running
-        $CodeRunning = Get-Process -Name "code" -ErrorAction SilentlyContinue
-
         if ($CodeRunning) {
-            #Can't read some files while Code is running
+            #Can't write some files while Code is running
             Write-Verbose "Closing VS Code"
             try {
                 if ($Pscmdlet.ShouldProcess("VS Code", "Closing VS Code")) {
