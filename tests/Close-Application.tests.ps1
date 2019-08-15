@@ -8,7 +8,7 @@ else {
 InModuleScope 'VSCodeBackup' {
     Describe "Close-Application" -Tag 'Build' {
         Context "Closes the application" {
-            Start-Process -FilePath notepad
+            & notepad
 
             It "should close notepad" {
                 $Notepad = Get-Process -Name "notepad"
