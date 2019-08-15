@@ -22,24 +22,28 @@ function Get-CodeDirectory {
             if ($PSVersionTable.OS -like "*linux*") {
                 $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path
                 $SettingsDirectory = "$HOME/.config/Code/User" | Resolve-Path
+                $SettingsFile = "$SettingsDirectory/settings.json"
             }
             elseif ($PSVersionTable.OS -like "*mac*") {
                 $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path
                 $SettingsDirectory = "$HOME/Library/Application Support/Code/User" | Resolve-Path
+                $SettingsFile = "$SettingsDirectory/settings.json"
             }
             elseif ($PSVersionTable.OS -like "*windows*") {
                 $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
                 $SettingsDirectory = "$env:APPDATA\Code\User" | Resolve-Path
+                $SettingsFile = "$SettingsDirectory\settings.json"
             }
         }
         else {
             $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
             $SettingsDirectory = "$env:APPDATA\Code\User" | Resolve-Path
+            $SettingsFile = "$SettingsDirectory\settings.json"
         }
         [PSCustomObject]@{
             ExtensionsDirectory = $ExtensionsDirectory
             SettingsDirectory   = $SettingsDirectory
-            SettingsFile        = "$SettingsDirectory/settings.json" | Resolve-Path -ErrorAction SilentlyContinue
+            SettingsFile        = $SettingsFile
         }
     }
 
