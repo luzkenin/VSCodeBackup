@@ -26,7 +26,7 @@ function Backup-VSCode {
     param (
         # Parameter help description
         [Parameter(Mandatory)]
-        [ValidateScript( {Test-Path -Path $_})]
+        [ValidateScript( { Test-Path -Path $_ })]
         [string]
         $Path,
         # Parameter help description
@@ -40,7 +40,7 @@ function Backup-VSCode {
     )
 
     begin {
-        $TimeStamp = Get-Date -Format o | ForEach-Object {$_ -replace ":", "."}
+        $TimeStamp = Get-Date -Format o | ForEach-Object { $_ -replace ":", "." }
         $Name = "VSCode-$($TimeStamp).zip"
         $Path = Resolve-Path -Path $Path
     }
@@ -55,27 +55,32 @@ function Backup-VSCode {
         }
 
         $StartTime = Get-Date -Format o
-        $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
-        $SettingsDirectory = "$env:APPDATA\Code\User\settings.json" | Resolve-Path
+        $CodeDir = Get-CodeDirectory
+
         if ($Extensions.IsPresent) {
             try {
-                Compress-Archive -Path $ExtensionsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
+                Compress-Archive -Path $CodeDir.ExtensionsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
             }
             catch {
                 throw $_
             }
         }
         if ($Settings.IsPresent) {
-            try {
-                Compress-Archive -LiteralPath $SettingsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
+            if ($CodeDir.SettingsFile) {
+                try {
+                    Compress-Archive -LiteralPath $CodeDir.SettingsFile -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
+                }
+                catch {
+                    throw $_
+                }
             }
-            catch {
-                throw $_
+            else {
+                Write-Error "Settings file is missing, skipping backup"
             }
         }
         $EndTime = Get-Date -Format o
         $ElapsedTime = New-TimeSpan -Start $StartTime -End $EndTime
-        $ZippedSize = if (Test-Path "$Path\$Name") {[string]([math]::Round((Get-ChildItem $Path\$Name).Length / 1mb)) + "MB"}else {$null}
+        $ZippedSize = if (Test-Path "$Path\$Name") { [string]([math]::Round((Get-ChildItem $Path\$Name).Length / 1mb)) + "MB" }else { $null }
 
         if ($Extensions.IsPresent -or $Settings.IsPresent) {
             [PSCustomObject]@{
@@ -88,7 +93,7 @@ function Backup-VSCode {
             }
         }
         else {
-            Write-warning -Message "Nothing to backup."
+            Write-Warning -Message "Nothing to backup."
         }
     }
 

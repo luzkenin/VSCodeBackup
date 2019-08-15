@@ -4,7 +4,7 @@
 
 @{
     RootModule        = 'VSCodeBackup.psm1'
-    ModuleVersion     = '0.1.7'
+    ModuleVersion     = '0.2.0'
     GUID              = 'aa70e5b3-c212-49a8-b566-4f4e20484e60'
     Author            = 'Joseph Warren'
     CompanyName       = 'Unknown'

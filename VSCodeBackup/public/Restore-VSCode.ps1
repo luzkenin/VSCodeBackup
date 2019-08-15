@@ -2,31 +2,31 @@ function Restore-VSCode {
     <#
     .SYNOPSIS
     Restore VS Code from a backup
-    
+
     .DESCRIPTION
     Restore VS Code from a backup
-    
+
     .PARAMETER Path
     Path to backup file
-    
+
     .PARAMETER Settings
     Switch to restore settings
-    
+
     .PARAMETER Extensions
     Switch to restore extensions
-    
+
     .EXAMPLE
     Restore-VSCode -Path .\VSCode-2019-01-31T23.33.58.3351871+01.00.zip -Settings -Extensions
-    
+
     .NOTES
     General notes
     #>
-    
-    [CmdletBinding()]
+
+    [CmdletBinding(SupportsShouldProcess)]
     param (
-        # Parameter help description
+        # Path to zip file
         [Parameter(Mandatory)]
-        [ValidateScript( {Test-Path -Path $_})]
+        [ValidateScript( { Test-Path -Path $_ })]
         [string]
         $Path,
         # Parameter help description
@@ -38,38 +38,49 @@ function Restore-VSCode {
         [switch]
         $Extensions
     )
-    
+
     begin {
         $Path = Resolve-Path -Path $Path
+        $TempPath = [system.io.path]::GetTempPath()
+        $CodeDir = Get-CodeDirectory
+        $CodeRunning = Get-Process -Name "code" -ErrorAction SilentlyContinue
     }
-    
+
     process {
-        #Can't write some files while Code is running
-        try {
-            Close-Application -ApplicationName "code"
-        }
-        catch {
-            $_
+        if ($CodeRunning) {
+            #Can't write some files while Code is running
+            Write-Verbose "Closing VS Code"
+            try {
+                if ($Pscmdlet.ShouldProcess("VS Code", "Closing VS Code")) {
+                    Close-Application -ApplicationName "code"
+                }
+            }
+            catch {
+                $_
+            }
         }
 
-        $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
-        $SettingsDirectory = "$env:APPDATA\Code\User\settings.json" | Resolve-Path
-
         try {
-            Expand-Archive -Path $Path -DestinationPath $env:TEMP -force
+            if ($Pscmdlet.ShouldProcess($TempPath, "Expanding VS Code archive to temp destination")) {
+                Expand-Archive -Path $Path -DestinationPath $TempPath -force
+            }
         }
         catch {
             throw $_
         }
-        
+
         if ($Extensions.IsPresent) {
-            Copy-Item -Path "$env:TEMP\.vscode\extensions" -Destination $ExtensionsDirectory -Force -Recurse
+            if ($Pscmdlet.ShouldProcess($CodeDir.ExtensionsDirectory, "Copying extensions to extenions folder")) {
+                Copy-Item -Path "$TempPath\.vscode\extensions" -Destination $CodeDir.ExtensionsDirectory -Force -Recurse
+            }
         }
         if ($Settings.IsPresent) {
-            Copy-Item -LiteralPath "$env:TEMP\settings.json" -Destination $SettingsDirectory -Force
+            if ($Pscmdlet.ShouldProcess($CodeDir.SettingsFile, "Copying settings")) {
+                Copy-Item -LiteralPath "$TempPath\settings.json" -Destination $CodeDir.SettingsFile -Force
+            }
         }
     }
-    
+
     end {
     }
 }

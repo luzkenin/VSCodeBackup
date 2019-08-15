@@ -2,11 +2,9 @@ function Close-Application {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
-        [string]
-        $ApplicationName,
+        [string]$ApplicationName,
         [Parameter()]
-        [string]
-        $TimeOut = "60"
+        $TimeOut = 60
     )
 
     begin {
@@ -17,10 +15,24 @@ function Close-Application {
         $ApplicationName = $ApplicationName -replace "\*", ""
         $Timeout = New-TimeSpan -Seconds $TimeOut
         $StopWatch = [diagnostics.stopwatch]::StartNew()
-        $ApplicationRunning = Get-Process -Name "*$($ApplicationName)*" -ErrorAction SilentlyContinue
-        if ($ApplicationRunning) {
-            if ( (Test-AdminElevation) -ne $true ) {
-                throw "This module requires elevation if VS Code is running."
+
+        while ($true -and ($StopWatch.elapsed -lt $Timeout)) {
+            Try {
+                $ApplicationRunning = Get-Process $ApplicationName -ErrorAction Stop
+            }
+            Catch [Microsoft.PowerShell.Commands.ProcessCommandException] {
+                break;
+            }
+            if ($ApplicationRunning) {
+                if ($PSVersionTable.Platform -notlike "*Unix*") {
+                    $ApplicationRunning.CloseMainWindow() | Out-Null
+                }
+                elseif ($PSVersionTable.Platform -notlike "*Windows*") {
+                    $ApplicationRunning | Stop-Process -Force
+                }
+                else {
+                    Write-Error "Could not determine platform"
+                }
             }
             else {
                 do {
@@ -41,5 +53,8 @@ function Close-Application {
     }
 
     end {
+        if ($StopWatch.IsRunning) {
+            $StopWatch.Stop()
+        }
     }
 }
