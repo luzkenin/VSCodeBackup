@@ -1,5 +1,5 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/pmxqbaxof9xnl78x?svg=true)](https://ci.appveyor.com/project/luzkenin/VSCodeBackup)
-[![PSGallery Version](https://img.shields.io/powershellgallery/v/myTasks.png?style=flat&logo=powershell&label=PowerShell%20Gallery)](https://www.powershellgallery.com/packages/VSCodeBackup/)
+[![PSGallery Version](https://img.shields.io/powershellgallery/v/VSCodeBackup.png?style=flat&logo=powershell&label=PowerShell%20Gallery)](https://www.powershellgallery.com/packages/VSCodeBackup/)
 
 # VSCodeBackup
 
