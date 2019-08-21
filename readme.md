@@ -1,4 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/pmxqbaxof9xnl78x?svg=true)](https://ci.appveyor.com/project/luzkenin/VSCodeBackup)
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/VSCodeBackup)](https://www.powershellgallery.com/packages/VSCodeBackup/)
+
 # VSCodeBackup
 
 Simple module to backup and restore VS Code extensions and settings. Useful for transferring to an offline network. PS Core is supported.
