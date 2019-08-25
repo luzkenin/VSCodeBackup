@@ -25,10 +25,10 @@ function Backup-VSCode {
     [CmdletBinding()]
     param (
         # Parameter help description
-        [Parameter(Mandatory)]
+        [Parameter()]
         [ValidateScript( { Test-Path -Path $_ })]
         [string]
-        $Path,
+        $Path = ".\",
         # Parameter help description
         [Parameter()]
         [switch]
@@ -48,7 +48,12 @@ function Backup-VSCode {
     process {
         #Can't read some files while Code is running
         try {
-            Close-Application -ApplicationName "code"
+            if ($IsMacOS) {
+                Close-Application -ApplicationName "Electron" #On MacOS the process for Code is called Electron.
+            }
+            else {
+                Close-Application -ApplicationName "code"
+            }
         }
         catch {
             $_
@@ -66,7 +71,7 @@ function Backup-VSCode {
             }
         }
         if ($Settings.IsPresent) {
-            if ($CodeDir.SettingsFile) {
+            if ($CodeDir.SettingsFile | Test-Path -ErrorAction SilentlyContinue) {
                 try {
                     Compress-Archive -LiteralPath $CodeDir.SettingsFile -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
                 }
@@ -75,7 +80,7 @@ function Backup-VSCode {
                 }
             }
             else {
-                Write-Error "Settings file is missing, skipping backup"
+                Write-Error "Settings file is missing, skipping settings file backup"
             }
         }
         $EndTime = Get-Date -Format o
