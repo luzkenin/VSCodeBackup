@@ -15,7 +15,7 @@
     VariablesToExport    = @()
     AliasesToExport      = @()
     CompatiblePSEditions = @('Desktop', 'Core')
-    # PowerShellVersion = ''
+    PowerShellVersion    = '5.1'
     # PowerShellHostName = ''
     # PowerShellHostVersion = ''
     # DotNetFrameworkVersion = ''
