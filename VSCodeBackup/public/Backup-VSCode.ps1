@@ -25,10 +25,10 @@ function Backup-VSCode {
     [CmdletBinding()]
     param (
         # Parameter help description
-        [Parameter(Mandatory)]
+        [Parameter()]
         [ValidateScript( { Test-Path -Path $_ })]
         [string]
-        $Path,
+        $Path = ".\",
         # Parameter help description
         [Parameter()]
         [switch]

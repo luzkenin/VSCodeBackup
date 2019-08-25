@@ -19,17 +19,17 @@ function Get-CodeDirectory {
 
     process {
         if ($PSVersionTable.PSVersion.Major -ge 6) {
-            if ($PSVersionTable.OS -like "*linux*") {
+            if ($IsLinux) {
                 $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path
                 $SettingsDirectory = "$HOME/.config/Code/User" | Resolve-Path
                 $SettingsFile = "$SettingsDirectory/settings.json"
             }
-            elseif ($PSVersionTable.OS -like "*mac*") {
+            elseif ($IsMacOS) {
                 $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path
                 $SettingsDirectory = "$HOME/Library/Application Support/Code/User" | Resolve-Path
                 $SettingsFile = "$SettingsDirectory/settings.json"
             }
-            elseif ($PSVersionTable.OS -like "*windows*") {
+            elseif ($IsWindows) {
                 $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
                 $SettingsDirectory = "$env:APPDATA\Code\User" | Resolve-Path
                 $SettingsFile = "$SettingsDirectory\settings.json"
