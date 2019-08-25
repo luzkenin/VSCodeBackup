@@ -17,7 +17,7 @@ function Close-Application {
         while ($true -and ($StopWatch.elapsed -lt $Timeout)) {
             Try {
                 if ($IsMacOS) {
-                    $ApplicationRunning = Get-Process $ApplicationName -ErrorAction SilentlyContinue | where path -like "*visual studio*" #I don't like this approach since it makes this function less general
+                    $ApplicationRunning = Get-Process $ApplicationName -ErrorAction SilentlyContinue | Where-Object path -like "*visual studio*" #I don't like this approach since it makes this function less general
                 }
                 else {
                     $ApplicationRunning = Get-Process $ApplicationName -ErrorAction SilentlyContinue
