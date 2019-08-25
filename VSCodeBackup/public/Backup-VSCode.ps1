@@ -48,7 +48,12 @@ function Backup-VSCode {
     process {
         #Can't read some files while Code is running
         try {
-            Close-Application -ApplicationName "code"
+            if ($IsMacOS) {
+                Close-Application -ApplicationName "Electron" #On MacOS the process for Code is called Electron.
+            }
+            else {
+                Close-Application -ApplicationName "code"
+            }
         }
         catch {
             $_

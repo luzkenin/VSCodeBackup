@@ -16,16 +16,21 @@ function Close-Application {
 
         while ($true -and ($StopWatch.elapsed -lt $Timeout)) {
             Try {
-                $ApplicationRunning = Get-Process $ApplicationName -ErrorAction Stop
+                if ($IsMacOS) {
+                    $ApplicationRunning = Get-Process $ApplicationName | where path -like "*visual studio*" -ErrorAction Stop #I don't like this approach since it makes this function less general
+                }
+                else {
+                    $ApplicationRunning = Get-Process $ApplicationName -ErrorAction Stop
+                }
             }
             Catch [Microsoft.PowerShell.Commands.ProcessCommandException] {
                 break;
             }
             if ($ApplicationRunning) {
-                if ($PSVersionTable.Platform -notlike "*Unix*") {
+                if ($IsWindows) {
                     $ApplicationRunning.CloseMainWindow() | Out-Null
                 }
-                elseif ($PSVersionTable.Platform -notlike "*Windows*") {
+                elseif ($IsLinux -or $IsMacOS) {
                     $ApplicationRunning | Stop-Process -Force
                 }
                 else {
