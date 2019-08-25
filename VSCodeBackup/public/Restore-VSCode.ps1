@@ -52,7 +52,12 @@ function Restore-VSCode {
             Write-Verbose "Closing VS Code"
             try {
                 if ($Pscmdlet.ShouldProcess("VS Code", "Closing VS Code")) {
-                    Close-Application -ApplicationName "code"
+                    if ($IsMacOS) {
+                        Close-Application -ApplicationName "Electron" #On MacOS the process for Code is called Electron.
+                    }
+                    else {
+                        Close-Application -ApplicationName "code"
+                    }
                 }
             }
             catch {

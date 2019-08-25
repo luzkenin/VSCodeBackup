@@ -71,7 +71,7 @@ function Backup-VSCode {
             }
         }
         if ($Settings.IsPresent) {
-            if ($CodeDir.SettingsFile) {
+            if ($CodeDir.SettingsFile | Test-Path -ErrorAction SilentlyContinue) {
                 try {
                     Compress-Archive -LiteralPath $CodeDir.SettingsFile -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
                 }
@@ -80,7 +80,7 @@ function Backup-VSCode {
                 }
             }
             else {
-                Write-Error "Settings file is missing, skipping backup"
+                Write-Error "Settings file is missing, skipping settings file backup"
             }
         }
         $EndTime = Get-Date -Format o
