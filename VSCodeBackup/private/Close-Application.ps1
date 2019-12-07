@@ -27,11 +27,14 @@ function Close-Application {
                 break;
             }
             if ($ApplicationRunning) {
-                if ($IsWindows) {
+                if (($IsWindows) -or ($PSVersionTable.PSVersion.Major -le 5)) {
                     $ApplicationRunning.CloseMainWindow() | Out-Null
                 }
                 elseif ($IsLinux -or $IsMacOS) {
                     $ApplicationRunning | Stop-Process -Force
+                }
+                elseif ($PSVersionTable.PSVersion.Major -le 5) {
+                    $ApplicationRunning.CloseMainWindow() | Out-Null
                 }
                 else {
                     Write-Error "Could not determine platform"
