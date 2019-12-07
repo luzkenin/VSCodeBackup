@@ -20,24 +20,24 @@ function Get-CodeDirectory {
     process {
         if ($PSVersionTable.PSVersion.Major -ge 6) {
             if ($IsLinux) {
-                $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path
-                $SettingsDirectory = "$HOME/.config/Code/User" | Resolve-Path
+                $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path -ErrorAction Stop
+                $SettingsDirectory = "$HOME/.config/Code/User" | Resolve-Path -ErrorAction Stop
                 $SettingsFile = "$SettingsDirectory/settings.json"
             }
             elseif ($IsMacOS) {
-                $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path
-                $SettingsDirectory = "$HOME/Library/Application Support/Code/User" | Resolve-Path
+                $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path -ErrorAction Stop
+                $SettingsDirectory = "$HOME/Library/Application Support/Code/User" | Resolve-Path -ErrorAction Stop
                 $SettingsFile = "$SettingsDirectory/settings.json"
             }
             elseif ($IsWindows) {
-                $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
-                $SettingsDirectory = "$env:APPDATA\Code\User" | Resolve-Path
+                $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path -ErrorAction Stop
+                $SettingsDirectory = "$env:APPDATA\Code\User" | Resolve-Path -ErrorAction Stop
                 $SettingsFile = "$SettingsDirectory\settings.json"
             }
         }
-        else {
-            $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path
-            $SettingsDirectory = "$env:APPDATA\Code\User" | Resolve-Path
+        elseif ($PSVersionTable.PSVersion.Major -le 5) {
+            $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path -ErrorAction Stop
+            $SettingsDirectory = "$env:APPDATA\Code\User" | Resolve-Path -ErrorAction Stop
             $SettingsFile = "$SettingsDirectory\settings.json"
         }
         [PSCustomObject]@{
