@@ -7,7 +7,7 @@
     ModuleVersion        = '0.2.4'
     GUID                 = 'aa70e5b3-c212-49a8-b566-4f4e20484e60'
     Author               = 'Joseph Warren'
-    CompanyName          = 'Unknown'
+    CompanyName          = 'No'
     Copyright            = '(c) Joseph Warren. All rights reserved.'
     Description          = 'Simple module to backup and restore VS Code extensions and settings. Useful for transferring to an offline network.'
     FunctionsToExport    = @('Backup-VSCode', 'Restore-VSCode')
