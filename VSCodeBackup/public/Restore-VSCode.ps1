@@ -43,6 +43,11 @@ function Restore-VSCode {
         $Path = Resolve-Path -Path $Path
         $TempPath = [system.io.path]::GetTempPath()
         $CodeDir = Get-CodeDirectory
+        <<<<<<< HEAD
+        $CodeRunning = Get-Process -Name "code" -ErrorAction SilentlyContinue
+        $StartTime = Get-Date -Format o
+        =======
+        >>>>>>> 093c3c4d05c0dcc835a92fef49f8a131b601e5ad
     }
 
     process {
@@ -80,6 +85,22 @@ function Restore-VSCode {
             if ($Pscmdlet.ShouldProcess($CodeDir.SettingsFile, "Copying settings")) {
                 Copy-Item -LiteralPath "$TempPath\settings.json" -Destination $CodeDir.SettingsFile -Force
             }
+        }
+        $EndTime = Get-Date -Format o
+        $ElapsedTime = New-TimeSpan -Start $StartTime -End $EndTime
+        $ZippedSize = if (Test-Path "$Path") { [string]([math]::Round((Get-ChildItem $Path).Length / 1mb)) + "MB" }else { $null }
+
+        if ($Extensions.IsPresent -or $Settings.IsPresent) {
+            [PSCustomObject][ordered]@{
+                FilePath  = [string]$Path
+                StartTime = [datetime]$StartTime
+                EndTime   = [datetime]$EndTime
+                Duration  = $ElapsedTime -replace '\.\d+$'
+                Size      = $ZippedSize
+            }
+        }
+        else {
+            Write-Warning -Message "Nothing to backup."
         }
     }
 

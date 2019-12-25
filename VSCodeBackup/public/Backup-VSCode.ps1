@@ -88,12 +88,12 @@ function Backup-VSCode {
         $ZippedSize = if (Test-Path "$Path\$Name") { [string]([math]::Round((Get-ChildItem $Path\$Name).Length / 1mb)) + "MB" }else { $null }
 
         if ($Extensions.IsPresent -or $Settings.IsPresent) {
-            [PSCustomObject]@{
+            [PSCustomObject][ordered]@{
                 FileName  = [string]$Name
                 FilePath  = [string]$Path
                 StartTime = [datetime]$StartTime
-                Duration  = $ElapsedTime -replace '\.\d+$'
                 EndTime   = [datetime]$EndTime
+                Duration  = $ElapsedTime -replace '\.\d+$'
                 Size      = $ZippedSize
             }
         }
