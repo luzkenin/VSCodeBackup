@@ -43,11 +43,8 @@ function Restore-VSCode {
         $Path = Resolve-Path -Path $Path
         $TempPath = [system.io.path]::GetTempPath()
         $CodeDir = Get-CodeDirectory
-        <<<<<<< HEAD
-        $CodeRunning = Get-Process -Name "code" -ErrorAction SilentlyContinue
+        #$CodeRunning = Get-Process -Name "code" -ErrorAction SilentlyContinue
         $StartTime = Get-Date -Format o
-        =======
-        >>>>>>> 093c3c4d05c0dcc835a92fef49f8a131b601e5ad
     }
 
     process {
