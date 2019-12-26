@@ -33,7 +33,7 @@ InModuleScope 'VSCodeBackup' {
 
                 $CodeDirectory.ExtensionsDirectory | Should -Be "$env:USERPROFILE\.vscode"
                 $CodeDirectory.SettingsDirectory | Should -Be "$env:APPDATA\Code\User"
-                $CodeDirectory.SettingsFile | Should -Be "$SettingsDirectory\settings.json"
+                $CodeDirectory.SettingsFile | Should -Exist
             }
         }
     }
