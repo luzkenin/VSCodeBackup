@@ -40,8 +40,9 @@ function Backup-VSCode {
     )
 
     begin {
-        $TimeStamp = Get-Date -Format o | ForEach-Object { $_ -replace ":", "." }
-        $Name = "VSCode-$($TimeStamp).zip"
+        #$TimeStamp = Get-Date -Format o | ForEach-Object { $_ -replace ":", "." }
+        #$Name = "VSCode-$($TimeStamp).zip"
+        $Name = 'VSCode-{0}.zip' -f (Get-Date -Format FileDateTime)
         $Path = Resolve-Path -Path $Path
     }
 
