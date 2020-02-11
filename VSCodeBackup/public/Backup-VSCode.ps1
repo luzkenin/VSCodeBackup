@@ -15,8 +15,15 @@ function Backup-VSCode {
     .PARAMETER Extensions
     Switch to backup extensions
 
+    .PARAMETER CompressionLevel
+    Specify compression level for zip file. Acceptable values are 'NoCompression' or 'Optimal'. Default value is 'NoCompression'.
+    Compression is recommanded for extension backup.
+
     .EXAMPLE
     Backup-VSCode -Path c:\Users\bobby\Desktop -Settings -Extensions
+
+    .EXAMPLE
+    Backup-VSCode -Path c:\Users\bobby\Desktop -Settings -Extensions -CompressionLevel Optimal
 
     .NOTES
     General notes
@@ -36,7 +43,11 @@ function Backup-VSCode {
         # Parameter help description
         [Parameter()]
         [switch]
-        $Extensions
+        $Extensions,
+        # Parameter help descripton
+        [Parameter()]
+        [ValidateSet('Optimal', 'NoCompression')]
+        $CompressionLevel = 'NoCompression'
     )
 
     begin {
@@ -64,7 +75,7 @@ function Backup-VSCode {
 
         if ($Extensions.IsPresent) {
             try {
-                Compress-Archive -Path $CodeDir.ExtensionsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
+                Compress-Archive -Path $CodeDir.ExtensionsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel $CompressionLevel
             }
             catch {
                 throw $_
@@ -73,7 +84,7 @@ function Backup-VSCode {
         if ($Settings.IsPresent) {
             if ($CodeDir.SettingsFile | Test-Path -ErrorAction SilentlyContinue) {
                 try {
-                    Compress-Archive -LiteralPath $CodeDir.SettingsFile -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
+                    Compress-Archive -LiteralPath $CodeDir.SettingsFile -DestinationPath $Path\$Name -Update -CompressionLevel $CompressionLevel
                 }
                 catch {
                     throw $_
