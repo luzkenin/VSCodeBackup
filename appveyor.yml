@@ -8,7 +8,7 @@ clone_folder: C:\MyProjects\VSCodeBackup
 
 environment:
   NugetApiKey:
-    secure: fFrDFRoHLvlIQvlRA2N+2dEiIbrjzyLO1wvMCClrV2vShsCEFyDzgmcU0kWueXCq
+    secure: Xt2Pj7t2YpEar02P6LosJYXpBmVvKG4IFc48TmZn9Zsrdp3Lh4NfMH3XYd8zy2Sv
 
 # Skip on updates to the readme.
 # We can force this by adding [skip ci] or [ci skip] anywhere in commit message 
