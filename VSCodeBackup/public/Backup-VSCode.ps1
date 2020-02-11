@@ -26,7 +26,7 @@ function Backup-VSCode {
     Backup-VSCode -Path c:\Users\bobby\Desktop -Settings -Extensions -CompressionLevel Optimal
 
     .NOTES
-    General notes
+    Thanks t0rsten (https://github.com/t0rsten) for the additions
     #>
 
     [CmdletBinding()]
