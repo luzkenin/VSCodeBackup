@@ -15,6 +15,9 @@ function Backup-VSCode {
     .PARAMETER Extensions
     Switch to backup extensions
 
+    .PARAMETER Snippets
+    Switch to restore snippets
+
     .PARAMETER CompressionLevel
     Specify compression level for zip file. Acceptable values are 'NoCompression' or 'Optimal'. Default value is 'NoCompression'.
     Compression is recommanded for extension backup.
@@ -44,6 +47,10 @@ function Backup-VSCode {
         [Parameter()]
         [switch]
         $Extensions,
+        # Parameter help description
+        [Parameter()]
+        [switch]
+        $Snippets,
         # Parameter help descripton
         [Parameter()]
         [ValidateSet('Optimal', 'NoCompression')]
@@ -94,11 +101,21 @@ function Backup-VSCode {
                 Write-Error "Settings file is missing, skipping settings file backup"
             }
         }
+        if ($Snippets.IsPresent) {
+            if ($CodeDir.SnippetsDirectory) {
+                try {
+                    Compress-Archive -Path $CodeDir.SnippetsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel NoCompression
+                }
+                catch {
+                    throw $_
+                }
+            }
+        }
         $EndTime = Get-Date -Format o
         $ElapsedTime = New-TimeSpan -Start $StartTime -End $EndTime
         $ZippedSize = if (Test-Path "$Path\$Name") { [string]([math]::Round((Get-ChildItem $Path\$Name).Length / 1mb)) + "MB" }else { $null }
 
-        if ($Extensions.IsPresent -or $Settings.IsPresent) {
+        if ($Extensions.IsPresent -or $Settings.IsPresent -or $Snippets.IsPresent) {
             [PSCustomObject][ordered]@{
                 FileName  = [string]$Name
                 FilePath  = [string]$Path

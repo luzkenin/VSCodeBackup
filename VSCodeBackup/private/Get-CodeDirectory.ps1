@@ -23,27 +23,32 @@ function Get-CodeDirectory {
                 $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path -ErrorAction Stop
                 $SettingsDirectory = "$HOME/.config/Code/User" | Resolve-Path -ErrorAction Stop
                 $SettingsFile = "$SettingsDirectory/settings.json"
+                $SnippetsDirectory = "$SettingsDirectory\Snippets" | Resolve-Path
             }
             elseif ($IsMacOS) {
                 $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path -ErrorAction Stop
                 $SettingsDirectory = "$HOME/Library/Application Support/Code/User" | Resolve-Path -ErrorAction Stop
                 $SettingsFile = "$SettingsDirectory/settings.json"
+                $SnippetsDirectory = "$SettingsDirectory\Snippets" | Resolve-Path
             }
             elseif ($IsWindows) {
                 $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path -ErrorAction Stop
                 $SettingsDirectory = "$env:APPDATA\Code\User" | Resolve-Path -ErrorAction Stop
                 $SettingsFile = "$SettingsDirectory\settings.json"
+                $SnippetsDirectory = "$SettingsDirectory\Snippets" | Resolve-Path
             }
         }
         elseif ($PSVersionTable.PSVersion.Major -le 5) {
             $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path -ErrorAction Stop
             $SettingsDirectory = "$env:APPDATA\Code\User" | Resolve-Path -ErrorAction Stop
             $SettingsFile = "$SettingsDirectory\settings.json"
+            $SnippetsDirectory = "$SettingsDirectory\Snippets" | Resolve -Path
         }
         [PSCustomObject]@{
             ExtensionsDirectory = $ExtensionsDirectory
             SettingsDirectory   = $SettingsDirectory
             SettingsFile        = $SettingsFile
+            SnippetsDirectory   = $SnippetsDirectory
         }
     }
 
