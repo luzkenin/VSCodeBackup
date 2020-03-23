@@ -42,7 +42,7 @@ function Get-CodeDirectory {
             $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path -ErrorAction Stop
             $SettingsDirectory = "$env:APPDATA\Code\User" | Resolve-Path -ErrorAction Stop
             $SettingsFile = "$SettingsDirectory\settings.json"
-            $SnippetsDirectory = "$SettingsDirectory\Snippets" | Resolve -Path
+            $SnippetsDirectory = "$SettingsDirectory\Snippets" | Resolve-Path
         }
         [PSCustomObject]@{
             ExtensionsDirectory = $ExtensionsDirectory
