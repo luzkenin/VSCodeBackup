@@ -15,8 +15,14 @@ function Restore-VSCode {
     .PARAMETER Extensions
     Switch to restore extensions
 
+    .PARAMETER Snippets
+    Switch to restore snippets
+
     .EXAMPLE
     Restore-VSCode -Path .\VSCode-2019-01-31T23.33.58.3351871+01.00.zip -Settings -Extensions
+
+    .EXAMPLE
+    Restore-VSCode -Path .\VSCode-2019-01-31T23.33.58.3351871+01.00.zip -Settings -Extensions -Snippets
 
     .NOTES
     General notes
@@ -36,7 +42,11 @@ function Restore-VSCode {
         # Parameter help description
         [Parameter()]
         [switch]
-        $Extensions
+        $Extensions,
+        # Parameter help description
+        [Parameter()]
+        [switch]
+        $Snippets
     )
 
     begin {
@@ -66,7 +76,7 @@ function Restore-VSCode {
 
         try {
             if ($Pscmdlet.ShouldProcess($TempPath, "Expanding VS Code archive to temp destination")) {
-                Expand-Archive -Path $Path -DestinationPath $TempPath -force
+                Expand-Archive -Path $Path -DestinationPath $TempPath -Force
             }
         }
         catch {
@@ -83,11 +93,16 @@ function Restore-VSCode {
                 Copy-Item -LiteralPath "$TempPath\settings.json" -Destination $CodeDir.SettingsFile -Force
             }
         }
+        if ($Snippets.IsPresent) {
+            if ($Pscmdlet.ShouldProcess($CodeDir.SnippetsDirectory, "Copying Snippets Directory")) {
+                Copy-Item -LiteralPath "$TempPath\Snippets" -Destination $($CodeDir.SnippetsDirectory | Split-Path -Parent) -Force -Recurse
+            }
+        }
         $EndTime = Get-Date -Format o
         $ElapsedTime = New-TimeSpan -Start $StartTime -End $EndTime
         $ZippedSize = if (Test-Path "$Path") { [string]([math]::Round((Get-ChildItem $Path).Length / 1mb)) + "MB" }else { $null }
 
-        if ($Extensions.IsPresent -or $Settings.IsPresent) {
+        if ($Extensions.IsPresent -or $Settings.IsPresent -or $Snippets.IsPresent) {
             [PSCustomObject][ordered]@{
                 FilePath  = [string]$Path
                 StartTime = [datetime]$StartTime
@@ -97,7 +112,7 @@ function Restore-VSCode {
             }
         }
         else {
-            Write-Warning -Message "Nothing to backup."
+            Write-Warning -Message "Nothing to restore."
         }
     }
 
