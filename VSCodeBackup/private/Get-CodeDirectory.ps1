@@ -18,32 +18,28 @@ function Get-CodeDirectory {
     }
 
     process {
-        if ($PSVersionTable.PSVersion.Major -ge 6) {
+        if ($PSVersionTable.PSEdition -eq 'Core') {
             if ($IsLinux) {
-                $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path -ErrorAction Stop
-                $SettingsDirectory = "$HOME/.config/Code/User" | Resolve-Path -ErrorAction Stop
-                $SettingsFile = "$SettingsDirectory/settings.json"
+                $ExtensionsDirectory = "$HOME/.vscode"
+                $SettingsDirectory = "$HOME/.config/Code/User"
             }
             elseif ($IsMacOS) {
-                $ExtensionsDirectory = "$HOME/.vscode" | Resolve-Path -ErrorAction Stop
-                $SettingsDirectory = "$HOME/Library/Application Support/Code/User" | Resolve-Path -ErrorAction Stop
-                $SettingsFile = "$SettingsDirectory/settings.json"
+                $ExtensionsDirectory = "$HOME/.vscode"
+                $SettingsDirectory = "$HOME/Library/Application Support/Code/User"
             }
             elseif ($IsWindows) {
-                $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path -ErrorAction Stop
-                $SettingsDirectory = "$env:APPDATA\Code\User" | Resolve-Path -ErrorAction Stop
-                $SettingsFile = "$SettingsDirectory\settings.json"
+                $ExtensionsDirectory = "$env:USERPROFILE\.vscode"
+                $SettingsDirectory = "$env:APPDATA\Code\User"
             }
         }
-        elseif ($PSVersionTable.PSVersion.Major -le 5) {
-            $ExtensionsDirectory = "$env:USERPROFILE\.vscode" | Resolve-Path -ErrorAction Stop
-            $SettingsDirectory = "$env:APPDATA\Code\User" | Resolve-Path -ErrorAction Stop
-            $SettingsFile = "$SettingsDirectory\settings.json"
+        else {
+            $ExtensionsDirectory = "$env:USERPROFILE\.vscode"
+            $SettingsDirectory = "$env:APPDATA\Code\User"
         }
         [PSCustomObject]@{
             ExtensionsDirectory = $ExtensionsDirectory
             SettingsDirectory   = $SettingsDirectory
-            SettingsFile        = $SettingsFile
+            SettingsFile        = "$SettingsDirectory\settings.json"
         }
     }
 

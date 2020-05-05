@@ -28,9 +28,10 @@ if ($False -eq (Test-Path -Path "$SettingsDirectory\settings.json")) {
 InModuleScope 'VSCodeBackup' {
     Describe "Get-CodeDirectory" -Tag 'Build' {
         Context "Tests getting code directory" {
-            It "should return true or false" {
+            It "should return directories on Linux Core" {
+                
                 $CodeDirectory = Get-CodeDirectory
-
+                
                 $CodeDirectory.ExtensionsDirectory | Should -Be "$env:USERPROFILE\.vscode"
                 $CodeDirectory.SettingsDirectory | Should -Be "$env:APPDATA\Code\User"
                 $CodeDirectory.SettingsFile | Should -Exist

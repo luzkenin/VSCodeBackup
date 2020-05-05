@@ -5,15 +5,14 @@ else {
     Import-Module C:\git\VsCodeBackup\VSCodeBackup\VSCodeBackup.psd1 -Force
 }
 
+
 InModuleScope 'VSCodeBackup' {
     Describe "Close-Application" -Tag 'Build' {
         Context "Closes the application" {
-            & notepad
-
             It "should close notepad" {
-                $Notepad = Get-Process -Name "notepad"
+                Mock notepad { $false }
                 Close-Application -ApplicationName "notepad"
-                $Notepad.HasExited | Should be $true
+                notepad | Should be $false
             }
         }
     }
