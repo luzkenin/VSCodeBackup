@@ -104,7 +104,9 @@ function Backup-VSCode {
         if ($Snippets.IsPresent) {
             if ($CodeDir.SnippetsDirectory) {
                 try {
-                    Compress-Archive -Path $CodeDir.SnippetsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel $CompressionLevel
+                    if ($null -eq (get-childitem -Path $CodeDir.SnippetsDirectory)) {
+                        Compress-Archive -Path $CodeDir.SnippetsDirectory -DestinationPath $Path\$Name -Update -CompressionLevel $CompressionLevel
+                    }
                 }
                 catch {
                     throw $_
